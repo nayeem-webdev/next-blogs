@@ -1,8 +1,19 @@
+"use server";
+
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 export default async function Profile() {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
+
+  console.log(user);
+
+  if (!user) {
+    redirect("/");
+  }
+
   const {
     id,
     email,
@@ -12,7 +23,23 @@ export default async function Profile() {
     username,
     phone_number,
   } = user;
-  console.log(user);
+
+  async function handleUserUpdate() {
+    try {
+      console.log("User data is being updated");
+
+      revalidatePath("/profile");
+
+      redirect(`/profile`);
+    } catch (error) {
+      console.error("Error updating user data:", error);
+    }
+  }
+
+  if (!user.family_name) {
+    await handleUserUpdate(); 
+  }
+
   return (
     <div className="container mx-auto px-5 pb-28">
       <div
@@ -33,7 +60,7 @@ export default async function Profile() {
         </div>
       </div>
       {user && (
-        <div className="max-w-4xl mx-auto mt-20 bg-gray-900 p-6 rounded-lg shadow-lg text-white">
+        <div className="max-w-4xl mx-auto mt-20">
           <div className="profile-picture text-center mb-4">
             <img
               src={picture || "https://via.placeholder.com/96"}
@@ -41,26 +68,24 @@ export default async function Profile() {
               className="w-24 h-24 rounded-full mx-auto"
             />
           </div>
-          <div className="profile-info">
-            <h2 className="text-xl font-semibold text-center mb-2">
-              Name:{" "}
-              {`${given_name || "Not provided"} ${family_name || ""}`.trim()}
-            </h2>
-            <p className="text-sm text-gray-400 text-center mb-4">ID: {id}</p>
-            <div className="details">
-              <p className="text-base">
-                <span className="font-semibold">Email:</span>{" "}
-                {email || "Not provided"}
-              </p>
-              <p className="text-base">
-                <span className="font-semibold">Username:</span>{" "}
-                {username || "Not provided"}
-              </p>
-              <p className="text-base">
-                <span className="font-semibold">Phone Number:</span>{" "}
-                {phone_number || "Not provided"}
-              </p>
-            </div>
+          <h2 className="text-xl font-semibold text-center mb-2">
+            Name:{" "}
+            {`${given_name || "Not provided"} ${family_name || ""}`.trim()}
+          </h2>
+          <p className="text-sm text-gray-400 text-center mb-4">ID: {id}</p>
+          <div className=" text-center">
+            <p className="text-base">
+              <span className="font-semibold">Email:</span>{" "}
+              {email || "Not provided"}
+            </p>
+            <p className="text-base">
+              <span className="font-semibold">Username:</span>{" "}
+              {username || "Not provided"}
+            </p>
+            <p className="text-base">
+              <span className="font-semibold">Phone Number:</span>{" "}
+              {phone_number || "Not provided"}
+            </p>
           </div>
         </div>
       )}

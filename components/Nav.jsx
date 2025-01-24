@@ -1,11 +1,19 @@
-"use client";
+// "use client";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+// import { usePathname } from "next/navigation";
 import { RiNextjsLine } from "react-icons/ri";
 
-export default function Nav({ user }) {
-  const pathname = usePathname();
-  const isActive = (path) => pathname === path;
+export default async function Nav() {
+  // const pathname = usePathname();
+  // const isActive = (path) => pathname === path;
+  //   ${
+  //   isActive("/")
+  //     ? "text-purple-600 underline"
+  //     : "text-black hover:text-purple-600 hover:underline"
+  // }
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
 
   return (
     <>
@@ -23,54 +31,37 @@ export default function Nav({ user }) {
           <div className="hidden md:flex space-x-4">
             <Link
               href="/"
-              className={`px-3 py-2 rounded-md text-sm font-medium ${
-                isActive("/")
-                  ? "text-purple-600 underline"
-                  : "text-black hover:text-purple-600 hover:underline"
-              }`}
+              className={`px-3 py-2 rounded-md text-sm font-medium`}
             >
               Home
             </Link>
             <Link
               href="/profile"
-              className={`px-3 py-2 rounded-md text-sm font-medium ${
-                isActive("/profile")
-                  ? "text-purple-600 underline"
-                  : "text-black hover:text-purple-600 hover:underline"
-              }`}
+              className={`px-3 py-2 rounded-md text-sm font-medium`}
             >
               Profile
             </Link>
             <Link
               href="/blogs"
-              className={`px-3 py-2 rounded-md text-sm font-medium ${
-                isActive("/blogs")
-                  ? "text-purple-600 underline"
-                  : "text-black hover:text-purple-600 hover:underline"
-              }`}
+              className={`px-3 py-2 rounded-md text-sm font-medium `}
             >
               Blogs
             </Link>
-            <Link
-              href="/api/auth/login"
-              className={`px-3 py-2 rounded-md text-sm font-medium ${
-                isActive("/blogs")
-                  ? "text-purple-600 underline"
-                  : "text-black hover:text-purple-600 hover:underline"
-              }`}
-            >
-              Login
-            </Link>
-            <Link
-              href="/api/auth/login"
-              className={`px-3 py-2 rounded-md text-sm font-medium ${
-                isActive("/blogs")
-                  ? "text-purple-600 underline"
-                  : "text-black hover:text-purple-600 hover:underline"
-              }`}
-            >
-              Logout
-            </Link>
+            {!user ? (
+              <Link
+                href="/api/auth/login"
+                className={`px-3 py-2 rounded-md text-sm font-medium bg-purple-600 text-white hover:bg-purple-700 transition-all`}
+              >
+                Login
+              </Link>
+            ) : (
+              <Link
+                href="/api/auth/logout"
+                className={`px-3 py-2 rounded-md text-sm font-medium bg-purple-600 text-white hover:bg-purple-700 transition-all`}
+              >
+                Logout
+              </Link>
+            )}
           </div>
         </div>
       </nav>
