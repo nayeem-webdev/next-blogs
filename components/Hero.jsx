@@ -1,6 +1,7 @@
 import Link from "next/link";
 
-export default function Hero() {
+export default async function Hero() {
+
   return (
     <div className="px-5">
       <div

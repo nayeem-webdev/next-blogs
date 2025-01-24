@@ -1,4 +1,18 @@
-export default function Profile() {
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+
+export default async function Profile() {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+  const {
+    id,
+    email,
+    family_name,
+    given_name,
+    picture,
+    username,
+    phone_number,
+  } = user;
+  console.log(user);
   return (
     <div className="container mx-auto px-5 pb-28">
       <div
@@ -13,11 +27,43 @@ export default function Profile() {
             Welcome To Your Profile
           </h2>
           <p className="max-w-lg mx-auto text-center text-white/70">
-            Here you will find all we have... about you, Have a look on your
-            Details... Let us know if you want to change anything.
+            Here you will find all we have... about you. Have a look at your
+            details... Let us know if you want to change anything.
           </p>
         </div>
       </div>
+      {user && (
+        <div className="max-w-4xl mx-auto mt-20 bg-gray-900 p-6 rounded-lg shadow-lg text-white">
+          <div className="profile-picture text-center mb-4">
+            <img
+              src={picture || "https://via.placeholder.com/96"}
+              alt="Profile Picture"
+              className="w-24 h-24 rounded-full mx-auto"
+            />
+          </div>
+          <div className="profile-info">
+            <h2 className="text-xl font-semibold text-center mb-2">
+              Name:{" "}
+              {`${given_name || "Not provided"} ${family_name || ""}`.trim()}
+            </h2>
+            <p className="text-sm text-gray-400 text-center mb-4">ID: {id}</p>
+            <div className="details">
+              <p className="text-base">
+                <span className="font-semibold">Email:</span>{" "}
+                {email || "Not provided"}
+              </p>
+              <p className="text-base">
+                <span className="font-semibold">Username:</span>{" "}
+                {username || "Not provided"}
+              </p>
+              <p className="text-base">
+                <span className="font-semibold">Phone Number:</span>{" "}
+                {phone_number || "Not provided"}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
