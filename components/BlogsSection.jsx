@@ -35,12 +35,9 @@ export async function BlogSection() {
                 </p>
                 {/* Read More Button */}
                 <div className="w-fit">
-                  <Link
-                    href={`/blogs/${post.id}`}
-                    className="text-purple-600 font-semibold hover:underline"
-                  >
+                  <span className="text-purple-600 font-semibold hover:underline">
                     Read More →
-                  </Link>
+                  </span>
                 </div>
               </div>
             </Link>

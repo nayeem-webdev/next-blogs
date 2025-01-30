@@ -1,19 +1,15 @@
-// "use client";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import Link from "next/link";
-// import { usePathname } from "next/navigation";
-import { RiNextjsLine } from "react-icons/ri";
+"use client";
 
-export default async function Nav() {
-  // const pathname = usePathname();
-  // const isActive = (path) => pathname === path;
-  //   ${
-  //   isActive("/")
-  //     ? "text-purple-600 underline"
-  //     : "text-black hover:text-purple-600 hover:underline"
-  // }
-  const { getUser } = getKindeServerSession();
-  const user = await getUser();
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { RiNextjsLine } from "react-icons/ri";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+
+export default function Nav() {
+  const pathname = usePathname();
+  const { user } = useKindeBrowserClient(); 
+
+  const isActive = (path) => pathname === path;
 
   return (
     <>
@@ -31,19 +27,31 @@ export default async function Nav() {
           <div className="hidden md:flex space-x-4">
             <Link
               href="/"
-              className={`px-3 py-2 rounded-md text-sm font-medium`}
+              className={`px-3 py-2 rounded-md text-sm font-medium ${
+                isActive("/")
+                  ? "text-purple-600 underline"
+                  : "text-black hover:text-purple-600 hover:underline"
+              }`}
             >
               Home
             </Link>
             <Link
               href="/profile"
-              className={`px-3 py-2 rounded-md text-sm font-medium`}
+              className={`px-3 py-2 rounded-md text-sm font-medium ${
+                isActive("/profile")
+                  ? "text-purple-600 underline"
+                  : "text-black hover:text-purple-600 hover:underline"
+              }`}
             >
               Profile
             </Link>
             <Link
               href="/blogs"
-              className={`px-3 py-2 rounded-md text-sm font-medium `}
+              className={`px-3 py-2 rounded-md text-sm font-medium ${
+                isActive("/blogs")
+                  ? "text-purple-600 underline"
+                  : "text-black hover:text-purple-600 hover:underline"
+              }`}
             >
               Blogs
             </Link>

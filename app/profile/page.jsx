@@ -11,7 +11,7 @@ export default async function Profile() {
   console.log(user);
 
   if (!user) {
-    redirect("/");
+    redirect("/api/auth/login");
   }
 
   const {
@@ -37,7 +37,7 @@ export default async function Profile() {
   }
 
   if (!user.family_name) {
-    await handleUserUpdate(); 
+    await handleUserUpdate();
   }
 
   return (
